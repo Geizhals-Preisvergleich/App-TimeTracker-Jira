@@ -91,7 +91,7 @@ before [ 'cmd_start', 'cmd_continue', 'cmd_append' ] => sub {
     if ( $self->meta->does_role('App::TimeTracker::Command::Git') ) {
         my $branch = $self->jira;
         if ($ticket) {
-            my $subject = $self->safe_ticket_subject( $ticket->{fields}->{summary} // '' );
+            my $subject = $self->_safe_ticket_subject( $ticket->{fields}->{summary} // '' );
             $branch .= '_' . $subject;
         }
         $self->branch($branch) unless $self->branch;
@@ -195,36 +195,6 @@ after 'cmd_stop' => sub {
     }
 };
 
-sub init_jira_ticket {
-    my ( $self, $task ) = @_;
-    my $id;
-    if ($task) {
-        $id = $task->jira_id;
-    }
-    elsif ( $self->jira ) {
-        $id = $self->jira;
-    }
-
-    my $transitions;
-    try {
-        $transitions = $self->jira_client->GET(sprintf('/issue/%s/transitions',$id));
-    }
-    catch {
-        error_message( 'Could not fetch JIRA ticket transitions: %s', $transitions );
-    };
-    $self->jira_ticket_transitions( $transitions->{transitions} );
-
-    my $ticket;
-    try {
-        $ticket = $self->jira_client->GET(sprintf('/issue/%s',$id), { fields => '-comment' });
-    }
-    catch {
-        error_message( 'Could not fetch JIRA ticket: %s', $ticket );
-    };
-
-    return $ticket;
-}
-
 sub _check_resolve_ticket_transition {
     my ( $self, $status_name ) = @_;
     my $transition_id;
@@ -250,22 +220,7 @@ sub App::TimeTracker::Data::Task::jira_id {
     }
 }
 
-sub safe_ticket_subject {
-    my ( $self, $subject ) = @_;
-
-    $subject = Unicode::Normalize::NFKD($subject);
-    $subject =~ s/\p{NonspacingMark}//g;
-    $subject =~ s/\W/_/g;
-    $subject =~ s/_+/_/g;
-    $subject =~ s/^_//;
-    $subject =~ s/_$//;
-    return $subject;
-}
-
-no Moose::Role;
-1;
-
-__END__
+=pod
 
 =head1 DESCRIPTION
 
@@ -339,6 +294,24 @@ If C<--jira> is set to a valid ticket identifier:
 
 If <log_time_spent> is set in config, adds and entry to the worklog of the Jira ticket.
 If <set_status/stop/transition> is set in config and the current Jira ticket state is <set_status/start/target_state>, updates the status of the ticket
+
+=cut
+sub _safe_ticket_subject {
+    my ( $self, $subject ) = @_;
+
+    $subject = Unicode::Normalize::NFKD($subject);
+    $subject =~ s/\p{NonspacingMark}//g;
+    $subject =~ s/\W/_/g;
+    $subject =~ s/_+/_/g;
+    $subject =~ s/^_//;
+    $subject =~ s/_$//;
+    return $subject;
+}
+
+no Moose::Role;
+1;
+
+__END__
 
 =head1 CAVEATS
 
