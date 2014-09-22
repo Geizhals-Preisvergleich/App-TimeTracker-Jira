@@ -2,6 +2,8 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.3       2014-09-22 16:46:56+02:00 Europe/Vienna
+
    - Re-added accidently removed init_jira_ticket() method
 
 0.2       2014-09-12 23:34:21+02:00 Europe/Vienna
