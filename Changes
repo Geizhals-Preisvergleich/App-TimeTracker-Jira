@@ -2,6 +2,8 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+   - Assignee is set automatically by Jira when starting a ticket
+
 0.3       2014-09-22 16:46:56+02:00 Europe/Vienna
 
    - Re-added accidently removed init_jira_ticket() method
