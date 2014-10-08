@@ -2,6 +2,8 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.4       2014-10-08 10:22:39+02:00 Europe/Vienna
+
    - Assignee is set automatically by Jira when starting a ticket
 
 0.3       2014-09-22 16:46:56+02:00 Europe/Vienna
