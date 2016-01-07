@@ -6,7 +6,7 @@ use 5.010;
 # ABSTRACT: App::TimeTracker Jira plugin
 use App::TimeTracker::Utils qw(error_message warning_message);
 
-our $VERSION = '0.4';
+our $VERSION = '0.5';
 
 use Moose::Role;
 use JIRA::REST ();
@@ -75,16 +75,15 @@ before [ 'cmd_start', 'cmd_continue', 'cmd_append' ] => sub {
     my $ticket;
     if ( $self->jira_client ) {
         $ticket = $self->jira_ticket;
-        if ( defined $ticket ) {
-            if ( defined $self->description ) {
-                $self->description(
-                    sprintf(
-                        '%s (%s)', $self->description, $ticket->{fields}->{summary}
-                    ) );
-            }
-            else {
-                $self->description( $ticket->{fields}->{summary} // '' );
-            }
+        return unless defined $ticket;
+        if ( defined $self->description ) {
+            $self->description(
+                sprintf(
+                    '%s (%s)', $self->description, $ticket->{fields}->{summary}
+                ) );
+        }
+        else {
+            $self->description( $ticket->{fields}->{summary} // '' );
         }
     }
 
@@ -103,7 +102,7 @@ after [ 'cmd_start', 'cmd_continue', 'cmd_append' ] => sub {
     return unless $self->has_jira && $self->jira_client;
 
     my $ticket = $self->jira_ticket;
-    return unless $ticket;
+    return unless defined $ticket;
 
     if ( $self->config->{jira}->{set_status}{start}->{transition}
             and $self->config->{jira}->{set_status}{start}->{target_state} ) {
@@ -144,7 +143,7 @@ after 'cmd_stop' => sub {
     return unless $task_rounded_minutes > 0;
 
     my $ticket = $self->_init_jira_ticket($task);
-    if ( not $ticket ) {
+    if ( not defined $ticket ) {
         say
             'Last task did not contain a JIRA ticket id, not updating TimeWorked or Status.';
         return;
@@ -195,6 +194,15 @@ sub _init_jira_ticket {
     elsif ( $self->jira ) {
         $id = $self->jira;
     }
+    return unless defined $id;
+
+    my $ticket;
+    try {
+        $ticket = $self->jira_client->GET(sprintf('/issue/%s',$id), { fields => '-comment' });
+    }
+    catch {
+        error_message( 'Could not fetch JIRA ticket: %s', $id );
+    };
 
     my $transitions;
     try {
@@ -202,17 +210,9 @@ sub _init_jira_ticket {
     }
     catch {
         require Data::Dumper;
-        error_message( 'Could not fetch JIRA ticket transitions via ticket %s: %s', $id, Data::Dumper::Dumper $transitions );
+        error_message( 'Could not fetch JIRA transitions for %s: %s', $id, Data::Dumper::Dumper $transitions );
     };
     $self->jira_ticket_transitions( $transitions->{transitions} );
-
-    my $ticket;
-    try {
-        $ticket = $self->jira_client->GET(sprintf('/issue/%s',$id), { fields => '-comment' });
-    }
-    catch {
-        error_message( 'Could not fetch JIRA ticket: %s', $ticket );
-    };
 
     return $ticket;
 }
@@ -355,7 +355,7 @@ __END__
             "log_time_spent" : "1",
             "server_url" : "http://localhost:8080",
             "set_status": {
-                "start": { "transition": "Start Progress", "target_state": "In Progress" },
+                "start": { "transition": ["Start Progress", "Restart progress", "Reopen and start progress"], "target_state": "In Progress" },
                 "stop": { "transition": "Stop Progress" }
             }
         }
