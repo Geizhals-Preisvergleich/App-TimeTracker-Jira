@@ -201,7 +201,8 @@ sub _init_jira_ticket {
         $transitions = $self->jira_client->GET(sprintf('/issue/%s/transitions',$id));
     }
     catch {
-        error_message( 'Could not fetch JIRA ticket transitions: %s', $transitions );
+        require Data::Dumper;
+        error_message( 'Could not fetch JIRA ticket transitions via ticket %s: %s', $id, Data::Dumper::Dumper $transitions );
     };
     $self->jira_ticket_transitions( $transitions->{transitions} );
 
@@ -221,13 +222,25 @@ sub _check_resolve_ticket_transition {
     my $transition_id;
 
     foreach my $transition ( @{$self->jira_ticket_transitions} ) {
-        if ( $transition->{name} eq $status_name ) {
+        if ( ref $status_name and ref $status_name eq 'ARRAY' ) {
+            foreach my $name ( @$status_name ) {
+                if ( $transition->{name} eq $name ) {
+                    $transition_id = $transition->{id};
+                    last;
+                }
+            }
+        }
+        elsif ( $transition->{name} eq $status_name ) {
             $transition_id = $transition->{id};
             last;
         }
     }
     if ( not defined $transition_id ) {
-        error_message( 'Could not resolve "%s" as valid JIRA ticket transition', $status_name );
+        require Data::Dumper;
+        error_message( 'None of the configured ticket transitions (%s) did match the ones valid for this JIRA ticket\'s workflow-state: %s',
+            ref $status_name ? join(',', map { '"'.$_.'"' } @$status_name) : $status_name,
+            join(',', map { '"'.$_->{name}.'"' } @{$self->jira_ticket_transitions} ),
+        );
         return;
     }
     return $transition_id;
@@ -239,6 +252,7 @@ sub App::TimeTracker::Data::Task::jira_id {
         next unless $tag =~ /^JIRA:(.+)/;
         return $1;
     }
+    return;
 }
 
 =pod
