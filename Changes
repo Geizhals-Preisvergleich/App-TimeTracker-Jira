@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+   - Allow to specifiy multiple starting states for transitioning to "Start Progress"
+   - Fixed github issue #1
+
 0.4       2014-10-08 10:22:39+02:00 Europe/Vienna
 
    - Assignee is set automatically by Jira when starting a ticket

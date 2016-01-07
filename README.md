@@ -4,7 +4,7 @@ App::TimeTracker::Command::Jira - App::TimeTracker Jira plugin
 
 # VERSION
 
-version 0.4
+version 0.5
 
 # DESCRIPTION
 
@@ -79,7 +79,7 @@ If <set\_status/stop/transition> is set in config and the current Jira ticket st
             "log_time_spent" : "1",
             "server_url" : "http://localhost:8080",
             "set_status": {
-                "start": { "transition": "Start Progress", "target_state": "In Progress" },
+                "start": { "transition": ["Start Progress", "Restart progress", "Reopen and start progress"], "target_state": "In Progress" },
                 "stop": { "transition": "Stop Progress" }
             }
         }
@@ -91,7 +91,7 @@ Michael Kröll <pepl@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2014 by Michael Kröll.
+This software is copyright (c) 2016 by Michael Kröll.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
