@@ -15,12 +15,6 @@ use Path::Class;
 use Try::Tiny;
 use Unicode::Normalize ();
 
-has 'jira' => (
-    is            => 'rw',
-    isa           => 'Str',
-    documentation => 'JIRA ticket ID',
-    predicate     => 'has_jira'
-);
 has 'jira_client' => (
     is         => 'ro',
     isa        => 'Maybe[JIRA::REST]',
@@ -65,6 +59,20 @@ sub _build_jira_client {
     return JIRA::REST->new($config->{server_url}, $config->{username}, $config->{password});
 
 }
+
+after ['_load_attribs_start','_load_attribs_continue','_load_attribs_append'] => sub {
+    my ($class,$meta) = @_;
+
+    $meta->add_attribute(
+        'jira' => {
+            is            => 'rw',
+            isa           => 'Str',
+            documentation => 'JIRA ticket ID',
+            predicate     => 'has_jira'
+        }
+    );
+    return;
+};
 
 before [ 'cmd_start', 'cmd_continue', 'cmd_append' ] => sub {
     my $self = shift;
