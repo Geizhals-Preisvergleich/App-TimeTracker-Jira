@@ -2,6 +2,9 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+    - Branch selection based on (immutable) ticket number (maros)
+    - Load jira attribute only for commands that need it (maros)
+
 0.5       2016-01-07 11:05:03+01:00 Europe/Vienna
 
    - Allow to specifiy multiple starting states for transitioning to "Start Progress"
