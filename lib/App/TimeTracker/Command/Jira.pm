@@ -101,7 +101,25 @@ before [ 'cmd_start', 'cmd_continue', 'cmd_append' ] => sub {
             my $subject = $self->_safe_ticket_subject( $ticket->{fields}->{summary} // '' );
             $branch .= '_' . $subject;
         }
-        $self->branch($branch) unless $self->branch;
+
+        # Get existing branches matching the ticket number
+        my @branches = map { s/^\*?\s+//; $_ }
+            $self->repository->run('branch','--list',$self->jira.'*');
+        if (scalar @branches == 0) {
+            say 'Creating new branch "'.$branch.'".'
+                unless $self->branch || $self->no_branch;
+        } elsif (scalar @branches == 1) {
+            $branch = $branches[0];
+        } else {
+            say 'More than one branch for '.$self->jira.'? I don\'t know what to do!';
+            foreach (@branches) {
+                say " * $_";
+            }
+            return;
+        }
+
+        $self->branch($branch)
+            unless $self->branch;
     }
 };
 
