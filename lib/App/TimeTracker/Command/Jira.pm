@@ -350,8 +350,8 @@ If C<--jira> is set to a valid ticket identifier:
 
 =head2 stop
 
-If <log_time_spent> is set in config, adds and entry to the worklog of the Jira ticket.
-If <set_status/stop/transition> is set in config and the current Jira ticket state is <set_status/start/target_state>, updates the status of the ticket
+If C<log_time_spent> is set in config, adds and entry to the worklog of the Jira ticket.
+If C<set_status/stop/transition> is set in config and the current Jira ticket state is C<set_status/start/target_state>, updates the status of the ticket
 
 =cut
 sub _safe_ticket_subject {
