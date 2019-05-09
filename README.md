@@ -30,13 +30,13 @@ add a hash named `jira`, containing the following keys:
 
 The URL of the Jira instance (without a trailing slash).
 
-### username \[REQUIRED\]
+### username \[OPTIONAL\]
 
 Username to connect with.
 
-### password \[REQUIRED\]
+### password \[OPTIONAL\]
 
-Password to connect with. Beware: stored in clear text!
+Password to connect with. Beware: This is stored in clear text! Better use authentication via `Config::Identity` via `JIRA::REST` where the credentials can be stored GPG encrypted.
 
 ### log\_time\_spent
 
