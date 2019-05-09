@@ -310,13 +310,13 @@ add a hash named C<jira>, containing the following keys:
 
 The URL of the Jira instance (without a trailing slash).
 
-=head3 username [REQUIRED]
+=head3 username [OPTIONAL]
 
 Username to connect with.
 
-=head3 password [REQUIRED]
+=head3 password [OPTIONAL]
 
-Password to connect with. Beware: stored in clear text!
+Password to connect with. Beware: This is stored in clear text! Better use authentication via C<Config::Identity> via C<JIRA::REST> where the credentials can be stored GPG encrypted.
 
 =head3 log_time_spent
 

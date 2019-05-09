@@ -30,13 +30,13 @@ add a hash named `jira`, containing the following keys:
 
 The URL of the Jira instance (without a trailing slash).
 
-### username \[OPTIONAL\]
+### username \[REQUIRED\]
 
 Username to connect with.
 
-### password \[OPTIONAL\]
+### password \[REQUIRED\]
 
-Password to connect with. Beware: This is stored in clear text! Better use authentication via [https://metacpan.org/pod/Config::Identity](Config::Identity) via [https://metacpan.org/pod/JIRA::REST](JIRA::REST) where the credentials can be stored GPG encrypted.
+Password to connect with. Beware: stored in clear text!
 
 ### log\_time\_spent
 
@@ -58,7 +58,7 @@ If `--jira` is set to a valid ticket identifier:
 
 - set or append the ticket subject in the task description ("Adding more cruft")
 - add the ticket number to the tasks tags ("ABC-1")
-- if `Git` is also used, determine a safe branch name from the ticket identifier and subject, and change into this branch ("ABC-1\_adding\_more\_cruft")
+- if `Git` is also used, determine a save branch name from the ticket identifier and subject, and change into this branch ("ABC-1\_adding\_more\_cruft")
 - updates the status of the ticket in Jira (given `set_status/start/transition` is set in config)
 
 ## stop
@@ -74,6 +74,8 @@ If <set\_status/stop/transition> is set in config and the current Jira ticket st
             "Jira"
         ],
         "jira" : {
+            "username" : "dingo",
+            "password" : "secret",
             "log_time_spent" : "1",
             "server_url" : "http://localhost:8080",
             "set_status": {
