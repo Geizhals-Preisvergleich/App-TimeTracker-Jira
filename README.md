@@ -63,8 +63,8 @@ If `--jira` is set to a valid ticket identifier:
 
 ## stop
 
-If <log\_time\_spent> is set in config, adds and entry to the worklog of the Jira ticket.
-If <set\_status/stop/transition> is set in config and the current Jira ticket state is <set\_status/start/target\_state>, updates the status of the ticket
+If `log_time_spent` is set in config, adds and entry to the worklog of the Jira ticket.
+If `set_status/stop/transition` is set in config and the current Jira ticket state is `set_status/start/target_state`, updates the status of the ticket
 
 # EXAMPLE CONFIG
 
