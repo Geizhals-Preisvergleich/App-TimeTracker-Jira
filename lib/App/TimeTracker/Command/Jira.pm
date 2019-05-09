@@ -51,13 +51,16 @@ sub _build_jira_client {
         return;
     }
 
-    unless ($config->{username} and $config->{password}) {
-        error_message('No Jira account credentials configured');
-        return;
+    my $jira_client;
+    try {
+        $jira_client = JIRA::REST->new($config->{server_url}, $config->{username}, $config->{password});
     }
+    catch {
+        error_message("Could not build JIRA client.\nEither configure username or password in your tracker config, .netrc or via Config::Identity, see perldoc JIRA::REST.\nError was:\n'%s'", $_ );
+        return;
+    };
 
-    return JIRA::REST->new($config->{server_url}, $config->{username}, $config->{password});
-
+    return $jira_client;
 }
 
 after ['_load_attribs_start','_load_attribs_continue','_load_attribs_append'] => sub {

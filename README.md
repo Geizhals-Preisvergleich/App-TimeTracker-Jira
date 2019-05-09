@@ -4,7 +4,7 @@ App::TimeTracker::Command::Jira - App::TimeTracker Jira plugin
 
 # VERSION
 
-version 0.6
+version 0.7
 
 # DESCRIPTION
 
@@ -30,13 +30,13 @@ add a hash named `jira`, containing the following keys:
 
 The URL of the Jira instance (without a trailing slash).
 
-### username \[REQUIRED\]
+### username \[OPTIONAL\]
 
 Username to connect with.
 
-### password \[REQUIRED\]
+### password \[OPTIONAL\]
 
-Password to connect with. Beware: stored in clear text!
+Password to connect with. Beware: This is stored in clear text! Better use authentication via [https://metacpan.org/pod/Config::Identity](Config::Identity) via [https://metacpan.org/pod/JIRA::REST](JIRA::REST) where the credentials can be stored GPG encrypted.
 
 ### log\_time\_spent
 
@@ -58,7 +58,7 @@ If `--jira` is set to a valid ticket identifier:
 
 - set or append the ticket subject in the task description ("Adding more cruft")
 - add the ticket number to the tasks tags ("ABC-1")
-- if `Git` is also used, determine a save branch name from the ticket identifier and subject, and change into this branch ("ABC-1\_adding\_more\_cruft")
+- if `Git` is also used, determine a safe branch name from the ticket identifier and subject, and change into this branch ("ABC-1\_adding\_more\_cruft")
 - updates the status of the ticket in Jira (given `set_status/start/transition` is set in config)
 
 ## stop
@@ -74,8 +74,6 @@ If <set\_status/stop/transition> is set in config and the current Jira ticket st
             "Jira"
         ],
         "jira" : {
-            "username" : "dingo",
-            "password" : "secret",
             "log_time_spent" : "1",
             "server_url" : "http://localhost:8080",
             "set_status": {
@@ -91,7 +89,7 @@ Michael Kröll <pepl@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2017 by Michael Kröll.
+This software is copyright (c) 2019 by Michael Kröll.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
