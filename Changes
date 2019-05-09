@@ -2,6 +2,8 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+    - Tidied up POD (Mohammad S Anwar)
+
 0.7       2019-05-09 15:49:11+02:00 Europe/Zurich
 
     - Make username and password Jira credentials optional and point to option where those can be stored encrypted via Config::Identity
