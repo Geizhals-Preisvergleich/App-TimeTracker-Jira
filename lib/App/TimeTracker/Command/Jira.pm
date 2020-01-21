@@ -232,6 +232,8 @@ sub _init_jira_ticket {
     catch {
         error_message( 'Could not fetch JIRA ticket: %s', $id );
     };
+    return
+        unless defined $ticket;
 
     my $transitions;
     try {
@@ -241,6 +243,9 @@ sub _init_jira_ticket {
         require Data::Dumper;
         error_message( 'Could not fetch JIRA transitions for %s: %s', $id, Data::Dumper::Dumper $transitions );
     };
+    return
+        unless defined $transitions;
+
     $self->jira_ticket_transitions( $transitions->{transitions} );
 
     return $ticket;
