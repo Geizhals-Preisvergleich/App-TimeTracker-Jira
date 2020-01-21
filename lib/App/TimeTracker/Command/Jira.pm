@@ -106,7 +106,7 @@ before [ 'cmd_start', 'cmd_continue', 'cmd_append' ] => sub {
         }
 
         # Get existing branches matching the ticket number
-        my @branches = map { s/^\*?\s+//; $_ }
+        my @branches = map { s/^\*?\s+//r }
             $self->repository->run('branch','--list',$self->jira.'*');
         if (scalar @branches == 0) {
             say 'Creating new branch "'.$branch.'".'
