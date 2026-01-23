@@ -2,6 +2,8 @@ Revision history for {{$dist->name}}
 
 {{$NEXT}}
 
+    - Enable authentication via Config::Identify again.
+
 1.0       2025-12-12 15:22:11+02:00 Europe/Vienna
 
     - Dummy release as module version has not been updated before
